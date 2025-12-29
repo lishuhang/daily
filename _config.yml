@@ -11,6 +11,8 @@ theme: null
 # 链接格式设置，确保生成 /2025/12/28/ 这样的路径
 permalink: /:year/:month/:day/
 
+future: true
+
 # 插件
 plugins:
   - jekyll-feed

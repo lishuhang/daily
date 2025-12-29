@@ -10,7 +10,7 @@ layout: base
     {% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: 'name' | reverse %}
     
     {% if postsByYear.size == 0 %}
-      <span style="font-size: 0.9rem; color: #888; padding: 5px;">暂无文章</span>
+      <span style="font-size: 0.9rem; color: #888; padding: 5px;">暂无年份数据</span>
     {% else %}
       {% for year in postsByYear %}
         <button class="filter-btn year-btn {% if forloop.first %}active{% endif %}" data-year="{{ year.name }}">{{ year.name }}</button>
@@ -33,7 +33,15 @@ layout: base
 <!-- 3. 文章列表 -->
 <div class="post-list" id="postList">
   {% if site.posts.size == 0 %}
-    <div style="padding: 20px; text-align: center; color: #888;">没有找到文章。请检查 _posts 目录下的文件名日期是否正确，或在 _config.yml 中开启 future: true。</div>
+    <div style="padding: 30px; text-align: center; color: #666; background: #f9f9f9; border-radius: 8px; margin: 20px 0;">
+      <h3 style="margin-top: 0;">未找到任何文章</h3>
+      <p style="margin-bottom: 10px;">请检查以下几点：</p>
+      <ul style="text-align: left; display: inline-block; font-size: 0.9rem;">
+        <li><strong>文件名格式：</strong> 必须是 <code>YYYY-MM-DD-filename.md</code> (例如 <code>2025-12-28-news.md</code>)。</li>
+        <li><strong>日期配置：</strong> 确保 <code>_config.yml</code> 中包含 <code>future: true</code>。</li>
+        <li><strong>修改后重启：</strong> 修改 _config.yml 后通常需要重启 Jekyll 服务才能生效。</li>
+      </ul>
+    </div>
   {% else %}
     {% for post in site.posts %}
       <article class="post-item" 
@@ -62,6 +70,8 @@ layout: base
     // 如果没有文章或年份，直接返回
     if (!currentYear) return;
 
+    let hasVisible = false;
+
     // 1. 筛选文章
     posts.forEach(post => {
       const pYear = post.dataset.year;
@@ -73,8 +83,9 @@ layout: base
       }
       
       post.style.display = match ? 'block' : 'none';
+      if (match) hasVisible = true;
     });
-
+    
     // 2. 更新月份按钮状态
     monthBtns.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.month === currentMonth);
