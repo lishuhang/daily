@@ -1,0 +1,21 @@
+title: "每日 AIGC 早报"
+email: i@lishuhang.me
+description: "每日 AIGC 早报"
+baseurl: "/daily" # 重要：部署在子路径
+url: "https://lishuhang.me"
+
+# 构建设置
+markdown: kramdown
+theme: null
+
+# 链接格式设置，确保生成 /2025/12/28/ 这样的路径
+permalink: /:year/:month/:day/
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+exclude:
+  - Gemfile
+  - Gemfile.lock

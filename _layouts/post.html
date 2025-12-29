@@ -1,0 +1,37 @@
+---
+layout: base
+---
+
+<article class="post-content">
+  <header class="post-header">
+    <h1 class="post-title-main">{{ page.title }}</h1>
+    <div class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y年%m月%d日" }}</time>
+    </div>
+  </header>
+
+  <div class="entry-content">
+    {{ content }}
+  </div>
+
+  <div class="post-footer">
+    <a href="{{ '/' | relative_url }}" class="back-link">← 返回列表</a>
+  </div>
+</article>
+
+<!-- 简单脚本：处理文章内图片的 HD 模式 -->
+<script>
+  // 监听 HD 模式切换事件
+  window.addEventListener('hdModeChanged', () => {
+    const isHD = document.body.getAttribute('data-hd') === 'true';
+    const images = document.querySelectorAll('.entry-content img');
+    
+    images.forEach(img => {
+      // 假设您的原图逻辑与主站类似，或者这里仅仅是示例
+      // 可以在这里添加切换 src 的逻辑
+      // 例如： if(isHD) img.src = img.dataset.original;
+      // 目前仅添加类名供 CSS 控制
+      img.classList.toggle('hd-mode', isHD);
+    });
+  });
+</script>
