@@ -6,10 +6,16 @@ layout: base
 <div class="filter-bar year-bar">
   <div class="filter-label">年份</div>
   <div class="filter-options" id="yearOptions">
-    {% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
-    {% for year in postsByYear %}
-      <button class="filter-btn year-btn {% if forloop.first %}active{% endif %}" data-year="{{ year.name }}">{{ year.name }}</button>
-    {% endfor %}
+    {% comment %} 获取所有文章并按年份分组，然后倒序排列（最新的在前面） {% endcomment %}
+    {% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: 'name' | reverse %}
+    
+    {% if postsByYear.size == 0 %}
+      <span style="font-size: 0.9rem; color: #888; padding: 5px;">暂无文章</span>
+    {% else %}
+      {% for year in postsByYear %}
+        <button class="filter-btn year-btn {% if forloop.first %}active{% endif %}" data-year="{{ year.name }}">{{ year.name }}</button>
+      {% endfor %}
+    {% endif %}
   </div>
 </div>
 
@@ -17,7 +23,6 @@ layout: base
 <div class="filter-bar month-bar">
   <div class="filter-label">月份</div>
   <div class="filter-options" id="monthOptions">
-    <!-- JS 将根据选中的年份动态填充月份 -->
     {% assign months = "01,02,03,04,05,06,07,08,09,10,11,12" | split: "," %}
     {% for month in months %}
       <button class="filter-btn month-btn" data-month="{{ month }}">{{ month }}月</button>
@@ -27,16 +32,20 @@ layout: base
 
 <!-- 3. 文章列表 -->
 <div class="post-list" id="postList">
-  {% for post in site.posts %}
-    <article class="post-item" 
-             data-year="{{ post.date | date: '%Y' }}" 
-             data-month="{{ post.date | date: '%m' }}">
-      <a href="{{ post.url | relative_url }}" class="post-link">
-        <span class="post-date">{{ post.date | date: "%m.%d" }}</span>
-        <h2 class="post-title">{{ post.title }}</h2>
-      </a>
-    </article>
-  {% endfor %}
+  {% if site.posts.size == 0 %}
+    <div style="padding: 20px; text-align: center; color: #888;">没有找到文章。请检查 _posts 目录下的文件名日期是否正确，或在 _config.yml 中开启 future: true。</div>
+  {% else %}
+    {% for post in site.posts %}
+      <article class="post-item" 
+               data-year="{{ post.date | date: '%Y' }}" 
+               data-month="{{ post.date | date: '%m' }}">
+        <a href="{{ post.url | relative_url }}" class="post-link">
+          <span class="post-date">{{ post.date | date: "%m.%d" }}</span>
+          <h2 class="post-title">{{ post.title }}</h2>
+        </a>
+      </article>
+    {% endfor %}
+  {% endif %}
 </div>
 
 <script>
@@ -45,12 +54,14 @@ layout: base
   const monthBtns = document.querySelectorAll('.month-btn');
   const posts = document.querySelectorAll('.post-item');
   
-  let currentYear = document.querySelector('.year-btn.active')?.dataset.year || new Date().getFullYear().toString();
-  let currentMonth = 'all'; // 'all' means show all months for that year
+  // 默认选中第一个年份按钮（通常是最新的年份）
+  let currentYear = document.querySelector('.year-btn.active')?.dataset.year;
+  let currentMonth = 'all'; 
 
   function filterPosts() {
-    let hasVisiblePost = false;
-    
+    // 如果没有文章或年份，直接返回
+    if (!currentYear) return;
+
     // 1. 筛选文章
     posts.forEach(post => {
       const pYear = post.dataset.year;
@@ -62,11 +73,9 @@ layout: base
       }
       
       post.style.display = match ? 'block' : 'none';
-      if(match) hasVisiblePost = true;
     });
 
-    // 2. 更新月份按钮状态 (可选：灰显没有文章的月份)
-    // 这里简单处理：重置月份选中状态
+    // 2. 更新月份按钮状态
     monthBtns.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.month === currentMonth);
     });
@@ -80,6 +89,10 @@ layout: base
   // 绑定年份点击
   yearBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      // 移除其他年份的高亮
+      yearBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
       currentYear = btn.dataset.year;
       currentMonth = 'all'; // 切换年份时重置月份
       filterPosts();
@@ -89,7 +102,6 @@ layout: base
   // 绑定月份点击
   monthBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // 如果点击已选中的月份，则取消选中（显示全年）
       if (currentMonth === btn.dataset.month) {
         currentMonth = 'all';
       } else {
