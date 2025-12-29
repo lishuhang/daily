@@ -1,0 +1,105 @@
+---
+layout: base
+---
+
+<!-- 1. 年份选择器 -->
+<div class="filter-bar year-bar">
+  <div class="filter-label">年份</div>
+  <div class="filter-options" id="yearOptions">
+    {% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+    {% for year in postsByYear %}
+      <button class="filter-btn year-btn {% if forloop.first %}active{% endif %}" data-year="{{ year.name }}">{{ year.name }}</button>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- 2. 月份选择器 -->
+<div class="filter-bar month-bar">
+  <div class="filter-label">月份</div>
+  <div class="filter-options" id="monthOptions">
+    <!-- JS 将根据选中的年份动态填充月份 -->
+    {% assign months = "01,02,03,04,05,06,07,08,09,10,11,12" | split: "," %}
+    {% for month in months %}
+      <button class="filter-btn month-btn" data-month="{{ month }}">{{ month }}月</button>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- 3. 文章列表 -->
+<div class="post-list" id="postList">
+  {% for post in site.posts %}
+    <article class="post-item" 
+             data-year="{{ post.date | date: '%Y' }}" 
+             data-month="{{ post.date | date: '%m' }}">
+      <a href="{{ post.url | relative_url }}" class="post-link">
+        <span class="post-date">{{ post.date | date: "%m.%d" }}</span>
+        <h2 class="post-title">{{ post.title }}</h2>
+      </a>
+    </article>
+  {% endfor %}
+</div>
+
+<script>
+(function() {
+  const yearBtns = document.querySelectorAll('.year-btn');
+  const monthBtns = document.querySelectorAll('.month-btn');
+  const posts = document.querySelectorAll('.post-item');
+  
+  let currentYear = document.querySelector('.year-btn.active')?.dataset.year || new Date().getFullYear().toString();
+  let currentMonth = 'all'; // 'all' means show all months for that year
+
+  function filterPosts() {
+    let hasVisiblePost = false;
+    
+    // 1. 筛选文章
+    posts.forEach(post => {
+      const pYear = post.dataset.year;
+      const pMonth = post.dataset.month;
+      
+      let match = (pYear === currentYear);
+      if (currentMonth !== 'all') {
+        match = match && (pMonth === currentMonth);
+      }
+      
+      post.style.display = match ? 'block' : 'none';
+      if(match) hasVisiblePost = true;
+    });
+
+    // 2. 更新月份按钮状态 (可选：灰显没有文章的月份)
+    // 这里简单处理：重置月份选中状态
+    monthBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.month === currentMonth);
+    });
+    
+    // 3. 更新年份按钮状态
+    yearBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.year === currentYear);
+    });
+  }
+
+  // 绑定年份点击
+  yearBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentYear = btn.dataset.year;
+      currentMonth = 'all'; // 切换年份时重置月份
+      filterPosts();
+    });
+  });
+
+  // 绑定月份点击
+  monthBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // 如果点击已选中的月份，则取消选中（显示全年）
+      if (currentMonth === btn.dataset.month) {
+        currentMonth = 'all';
+      } else {
+        currentMonth = btn.dataset.month;
+      }
+      filterPosts();
+    });
+  });
+
+  // 初始化
+  filterPosts();
+})();
+</script>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 }}">
+  <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+</head>
+<body>
+
+  <!-- 固定 TopNav -->
+  <header class="site-header">
+    <div class="wrapper header-inner">
+      <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      
+      <div class="header-controls">
+        <a href="{{ '/about' | relative_url }}" class="nav-link">关于</a>
+        
+        <!-- 原图开关 -->
+        <label class="toggle-btn" title="原图模式">
+          <input type="checkbox" id="hdToggle">
+          <span class="toggle-label">HD</span>
+        </label>
+
+        <!-- 深色模式开关 -->
+        <label class="toggle-btn" title="深色模式">
+          <input type="checkbox" id="darkToggle">
+          <span class="toggle-label">🌙</span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="page-content">
+    <div class="wrapper">
+      {{ content }}
+    </div>
+  </main>
+
+  <!-- 极简脚本：处理主题和原图 -->
+  <script>
+    (function() {
+      // 1. 深色模式
+      const darkToggle = document.getElementById('darkToggle');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedTheme = localStorage.getItem('daily_theme');
+      
+      function setTheme(isDark) {
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('daily_theme', isDark ? 'dark' : 'light');
+        if(darkToggle) darkToggle.checked = isDark;
+      }
+
+      // 初始化
+      if (savedTheme) {
+        setTheme(savedTheme === 'dark');
+      } else {
+        setTheme(prefersDark);
+      }
+
+      if(darkToggle) {
+        darkToggle.addEventListener('change', e => setTheme(e.target.checked));
+      }
+
+      // 2. 原图模式 (保存状态供 CSS 或 JS 使用)
+      const hdToggle = document.getElementById('hdToggle');
+      const savedHD = localStorage.getItem('daily_hd');
+      
+      function setHD(isHD) {
+        document.body.setAttribute('data-hd', isHD);
+        localStorage.setItem('daily_hd', isHD);
+        if(hdToggle) hdToggle.checked = isHD;
+        // 触发重绘或图片更新事件（如果有图片懒加载逻辑）
+        window.dispatchEvent(new Event('hdModeChanged'));
+      }
+
+      if (savedHD) {
+        setHD(savedHD === 'true');
+      }
+
+      if(hdToggle) {
+        hdToggle.addEventListener('change', e => setHD(e.target.checked));
+      }
+    })();
+  </script>
+
+</body>
+</html>
