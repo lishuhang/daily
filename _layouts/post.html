@@ -3,13 +3,28 @@ layout: base
 ---
 
 <article class="post-content">
+  
+  <!-- 通栏题图区域 -->
+  {% if page.image %}
+  <div class="post-banner-fullwidth">
+    <img src="{{ page.image }}" alt="{{ page.title }}" class="post-banner-img">
+  </div>
+  {% endif %}
+
+  <!-- 文章头部信息（标题、日期） -->
   <header class="post-header">
     <h1 class="post-title-main">{{ page.title }}</h1>
     <div class="post-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y年%m月%d日" }}</time>
+      {% if page.tags.size > 0 %}
+      <span class="post-tags-meta">
+        {% for tag in page.tags %} #{{ tag }}{% endfor %}
+      </span>
+      {% endif %}
     </div>
   </header>
 
+  <!-- 正文内容 -->
   <div class="entry-content">
     {{ content }}
   </div>
@@ -24,13 +39,12 @@ layout: base
   // 监听 HD 模式切换事件
   window.addEventListener('hdModeChanged', () => {
     const isHD = document.body.getAttribute('data-hd') === 'true';
-    const images = document.querySelectorAll('.entry-content img');
+    // 同时处理正文图片和通栏大图
+    const images = document.querySelectorAll('.entry-content img, .post-banner-img');
     
     images.forEach(img => {
-      // 假设您的原图逻辑与主站类似，或者这里仅仅是示例
-      // 可以在这里添加切换 src 的逻辑
-      // 例如： if(isHD) img.src = img.dataset.original;
-      // 目前仅添加类名供 CSS 控制
+      // 可以在这里添加切换高清图链接的逻辑
+      // 目前仅添加类名供 CSS 控制 (例如去除滤镜或最大宽度限制)
       img.classList.toggle('hd-mode', isHD);
     });
   });
