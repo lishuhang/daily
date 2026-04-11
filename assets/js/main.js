@@ -229,7 +229,7 @@
     // 构建该月文章索引
     var postByDay = {};
     allPosts.forEach(function(p) {
-      if (p.y === String(year) && p.m === String(month)) {
+      if (p.y === currentYear && p.m === currentMonth) {
         postByDay[p.day] = p;
       }
     });

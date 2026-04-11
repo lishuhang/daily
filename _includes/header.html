@@ -3,12 +3,16 @@
   <div class="header-inner">
     <!-- 左：Logo + 站名 -->
     <div class="site-branding">
-      <a href="{{ '/' | relative_url }}" class="site-logo">
+      {% assign logo_href = site.logo_url | default: '/' %}
+      {% if logo_href contains '://' %}{% assign logo_href = logo_href %}{% else %}{% assign logo_href = logo_href | relative_url %}{% endif %}
+      <a href="{{ logo_href }}" class="site-logo">
         <img src="{{ site.logo | default: '/assets/logo.svg' | relative_url }}" alt="{{ site.title }}">
       </a>
       {% if site.show_title != false %}
+      {% assign title_href = site.title_url | default: '/' %}
+      {% if title_href contains '://' %}{% assign title_href = title_href %}{% else %}{% assign title_href = title_href | relative_url %}{% endif %}
       <div class="brand-text">
-        <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+        <a href="{{ title_href }}" class="site-title">{{ site.title }}</a>
       </div>
       {% endif %}
     </div>

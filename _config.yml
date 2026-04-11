@@ -11,6 +11,12 @@ color: "#347df8"
 logo: "/assets/logo.svg"
 show_title: true
 
+# Logo 和 Title 分别链接到不同地址（子站场景）
+# logo_url: Logo 图片点击后跳转的地址（默认指向主站）
+logo_url: "https://lishuhang.me/"
+# title_url: 站名文字点击后跳转的地址（默认指向子站首页）
+title_url: "/"
+
 # Footer 左侧 credit（支持 Markdown）
 credit: "© 2025 书航 [lishuhang.me](https://lishuhang.me)"
 
