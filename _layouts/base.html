@@ -139,10 +139,12 @@
 
     <!-- 文章详情页：嵌入同月数据给迷你日历用 -->
     {% if page.layout == 'post' %}
+    {% assign cur_ym = page.date | date: '%Y-%m' %}
     <script>
     window.__MONTH__={y:'{{ page.date | date:"%Y" }}',m:'{{ page.date | date:"%m" }}',d:'{{ page.date | date:"%d" }}',posts:{}};
     {% for post in site.posts %}
-    {% if post.date | date: '%Y-%m' == page.date | date: '%Y-%m' %}
+    {% assign post_ym = post.date | date: '%Y-%m' %}
+    {% if post_ym == cur_ym %}
     window.__MONTH__.posts['{{ post.date | date: "%d" }}']={{post.url|relative_url|jsonify}};
     {% endif %}
     {% endfor %}

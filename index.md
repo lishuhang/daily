@@ -1,4 +1,4 @@
 ---
-layout: base
-home: true
+layout: home
+title: 首页
 ---
