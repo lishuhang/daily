@@ -1,23 +1,17 @@
-<!-- 顶部吸顶页眉（同主站风格） -->
 <header class="site-header" id="site-header">
   <div class="header-inner">
-    <!-- 左：Logo + 站名 -->
     <div class="site-branding">
-      {% assign logo_href = site.logo_url | default: '/' %}
-      {% if logo_href contains '://' %}{% assign logo_href = logo_href %}{% else %}{% assign logo_href = logo_href | relative_url %}{% endif %}
-      <a href="{{ logo_href }}" class="site-logo">
+      {% assign lh = site.logo_url | default: '/' %}{% if lh contains '://' %}{% else %}{% assign lh = lh | relative_url %}{% endif %}
+      <a href="{{ lh }}" class="site-logo">
         <img src="{{ site.logo | default: '/assets/logo.svg' | relative_url }}" alt="{{ site.title }}">
       </a>
       {% if site.show_title != false %}
-      {% assign title_href = site.title_url | default: '/' %}
-      {% if title_href contains '://' %}{% assign title_href = title_href %}{% else %}{% assign title_href = title_href | relative_url %}{% endif %}
+      {% assign th = site.title_url | default: '/' %}{% if th contains '://' %}{% else %}{% assign th = th | relative_url %}{% endif %}
       <div class="brand-text">
-        <a href="{{ title_href }}" class="site-title">{{ site.title }}</a>
+        <a href="{{ th }}" class="site-title">{{ site.title }}</a>
       </div>
       {% endif %}
     </div>
-
-    <!-- 中：页眉导航（桌面端） -->
     <nav class="header-nav" id="header-nav">
       <ul class="header-nav-list">
         <li><a href="{{ site.main_site | default: '/' }}/">首页</a></li>
@@ -27,8 +21,6 @@
         <li><a href="{{ '/feed.xml' | relative_url }}" target="_blank" rel="noopener noreferrer">RSS</a></li>
       </ul>
     </nav>
-
-    <!-- 右：汉堡按钮（移动端） -->
     <button class="sidebar-toggle" id="hamburgerButton" aria-label="打开菜单">
       <svg class="icon-svg"><use href="#i-menu"/></svg>
     </button>

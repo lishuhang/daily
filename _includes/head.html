@@ -1,26 +1,12 @@
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% seo %}
-
-  <!-- RSS 自动发现 -->
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | xml_escape }}" href="{{ '/feed.xml' | relative_url }}">
-
-  <!-- 思源黑体 -->
   <link rel="stylesheet" href="https://google-fonts.mirrors.sjtug.sjtu.edu.cn/earlyaccess/notosanssc.css">
-
-  <!-- 全站样式 -->
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
-
-  <!-- 主题色动态注入 -->
   <script>
-  (function(){
-    var a='{{ site.color | default: "#347df8" }}';
-    document.documentElement.style.setProperty('--accent',a);
-    var h=a.replace('#',''),r=parseInt(h.substring(0,2),16),g=parseInt(h.substring(2,4),16),b=parseInt(h.substring(4,6),16);
-    document.documentElement.style.setProperty('--accent-hover','rgb('+Math.round(r*.82)+','+Math.round(g*.82)+','+Math.round(b*.82)+')');
-    document.documentElement.style.setProperty('--accent-light','rgba('+r+','+g+','+b+',0.1)');
-  })();
+  (function(){var a='{{ site.color | default: "#347df8" }}';document.documentElement.style.setProperty('--accent',a);var h=a.replace('#',''),r=parseInt(h.substring(0,2),16),g=parseInt(h.substring(2,4),16),b=parseInt(h.substring(4,6),16);document.documentElement.style.setProperty('--accent-hover','rgb('+Math.round(r*.82)+','+Math.round(g*.82)+','+Math.round(b*.82)+')');document.documentElement.style.setProperty('--accent-light','rgba('+r+','+g+','+b+',0.1)')})();
   </script>
 </head>

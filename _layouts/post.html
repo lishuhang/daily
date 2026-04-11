@@ -3,18 +3,22 @@ layout: base
 ---
 
 <div class="article-layout">
-  <!-- 左侧栏：题图 + 迷你日历 -->
+  <!-- 左侧栏：题图 + 迷你日历 + 其它日期 + 分享 -->
   <aside class="article-sidebar">
     {% if page.image %}
     <div class="article-cover">
       <img src="https://images.weserv.nl/?url={{ page.image | url_encode }}&w=640&h=640&output=jpg&q=80&fit=cover"
-           alt="{{ page.title }}" loading="lazy"
-           data-original="{{ page.image }}">
+           alt="{{ page.title }}" loading="lazy" data-original="{{ page.image }}">
     </div>
     {% endif %}
-    <div class="mini-calendar-wrap">
+    <div class="mini-calendar-wrap" id="miniCalWrap">
       <div class="mini-cal-header" id="miniCalHeader"></div>
       <div class="mini-calendar" id="miniCalendar"></div>
+    </div>
+    <!-- 横屏显示的操作栏，竖屏隐藏 -->
+    <div class="article-actions article-sidebar-actions">
+      <a href="{{ '/' | relative_url }}" class="back-link">&larr; 其它日期</a>
+      {% include share.html %}
     </div>
   </aside>
 
@@ -39,8 +43,8 @@ layout: base
       {{ content }}
     </article>
 
-    <!-- 底部操作栏：其它日期 + 分享 -->
-    <div class="article-actions">
+    <!-- 竖屏显示的操作栏，横屏隐藏 -->
+    <div class="article-actions article-body-actions">
       <a href="{{ '/' | relative_url }}" class="back-link">&larr; 其它日期</a>
       {% include share.html %}
     </div>
