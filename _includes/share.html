@@ -1,0 +1,37 @@
+{% assign url = page.url | absolute_url %}
+{% assign title = page.title %}
+
+<div class="share-buttons">
+  <a href="https://service.weibo.com/share/share.php?url={{ url | url_encode }}&title={{ title | url_encode }}"
+     target="_blank" rel="noopener noreferrer" class="share-btn" title="分享到微博">
+    <svg class="icon-svg"><use href="#i-weibo"/></svg>
+  </a>
+  <a href="https://twitter.com/intent/tweet?url={{ url | url_encode }}&text={{ title | url_encode }}"
+     target="_blank" rel="noopener noreferrer" class="share-btn" title="分享到 Twitter">
+    <svg class="icon-svg"><use href="#i-twitter"/></svg>
+  </a>
+  <a href="https://connect.qq.com/widget/shareqq/index.html?url={{ url | url_encode }}&title={{ title | url_encode }}"
+     target="_blank" rel="noopener noreferrer" class="share-btn" title="分享到 QQ">
+    <svg class="icon-svg"><use href="#i-qq"/></svg>
+  </a>
+  <button class="share-btn share-btn-wechat" id="wechatShareBtn" title="分享到微信">
+    <svg class="icon-svg"><use href="#i-wechat"/></svg>
+  </button>
+  <button class="share-btn" id="copyLinkBtn" title="复制链接">
+    <svg class="icon-svg"><use href="#i-link"/></svg>
+  </button>
+</div>
+
+<!-- 微信分享二维码浮层 -->
+<div class="wechat-qr-overlay" id="wechatQrOverlay">
+  <div class="wechat-qr-popup">
+    <div class="wechat-qr-header">
+      <span>分享到微信</span>
+      <button class="wechat-qr-close" id="wechatQrClose">&times;</button>
+    </div>
+    <div class="wechat-qr-body">
+      <div class="wechat-qr-hint">打开微信「扫一扫」<br>扫描下方二维码阅读本文</div>
+      <div id="wechatQrCode" class="wechat-qr-code"></div>
+    </div>
+  </div>
+</div>

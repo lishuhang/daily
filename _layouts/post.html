@@ -2,50 +2,47 @@
 layout: base
 ---
 
-<article class="post-content">
-  
-  <!-- 通栏题图区域 -->
-  {% if page.image %}
-  <div class="post-banner-fullwidth">
-    <img src="{{ page.image }}" alt="{{ page.title }}" class="post-banner-img">
-  </div>
-  {% endif %}
-
-  <!-- 文章头部信息（标题、日期） -->
-  <header class="post-header">
-    <h1 class="post-title-main">{{ page.title }}</h1>
-    <div class="post-meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y年%m月%d日" }}</time>
-      {% if page.tags.size > 0 %}
-      <span class="post-tags-meta">
-        {% for tag in page.tags %} #{{ tag }}{% endfor %}
-      </span>
-      {% endif %}
+<div class="article-layout">
+  <!-- 左侧栏：题图 + 迷你日历 -->
+  <aside class="article-sidebar">
+    {% if page.image %}
+    <div class="article-cover">
+      <img src="https://images.weserv.nl/?url={{ page.image | url_encode }}&w=640&h=640&output=jpg&q=80&fit=cover"
+           alt="{{ page.title }}" loading="lazy"
+           data-original="{{ page.image }}">
     </div>
-  </header>
+    {% endif %}
+    <div class="mini-calendar-wrap">
+      <div class="mini-cal-header" id="miniCalHeader"></div>
+      <div class="mini-calendar" id="miniCalendar"></div>
+    </div>
+  </aside>
 
-  <!-- 正文内容 -->
-  <div class="entry-content">
-    {{ content }}
+  <!-- 右侧主体 -->
+  <div class="article-body">
+    <header class="article-header">
+      <h1 class="article-title">{{ page.title }}</h1>
+      <div class="article-meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y年%m月%d日" }}</time>
+        {% if page.tags and page.tags.size > 0 %}
+        <span class="meta-sep">·</span>
+        <span class="article-tags">
+          {% for tag in page.tags %}
+          <span class="article-tag">#{{ tag }}</span>
+          {% endfor %}
+        </span>
+        {% endif %}
+      </div>
+    </header>
+
+    <article class="article-content">
+      {{ content }}
+    </article>
+
+    <!-- 底部操作栏：其它日期 + 分享 -->
+    <div class="article-actions">
+      <a href="{{ '/' | relative_url }}" class="back-link">&larr; 其它日期</a>
+      {% include share.html %}
+    </div>
   </div>
-
-  <div class="post-footer">
-    <a href="{{ '/' | relative_url }}" class="back-link">← 返回列表</a>
-  </div>
-</article>
-
-<!-- 简单脚本：处理文章内图片的 HD 模式 -->
-<script>
-  // 监听 HD 模式切换事件
-  window.addEventListener('hdModeChanged', () => {
-    const isHD = document.body.getAttribute('data-hd') === 'true';
-    // 同时处理正文图片和通栏大图
-    const images = document.querySelectorAll('.entry-content img, .post-banner-img');
-    
-    images.forEach(img => {
-      // 可以在这里添加切换高清图链接的逻辑
-      // 目前仅添加类名供 CSS 控制 (例如去除滤镜或最大宽度限制)
-      img.classList.toggle('hd-mode', isHD);
-    });
-  });
-</script>
+</div>

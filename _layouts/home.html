@@ -1,128 +1,21 @@
 ---
 layout: base
+home: true
 ---
 
-<!-- 1. 年份选择器 -->
+<!-- 年份选择器 -->
 <div class="filter-bar year-bar">
   <div class="filter-label">年份</div>
-  <div class="filter-options" id="yearOptions">
-    {% comment %} 获取所有文章并按年份分组，然后倒序排列（最新的在前面） {% endcomment %}
-    {% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" | sort: 'name' | reverse %}
-    
-    {% if postsByYear.size == 0 %}
-      <span style="font-size: 0.9rem; color: #888; padding: 5px;">暂无年份数据</span>
-    {% else %}
-      {% for year in postsByYear %}
-        <button class="filter-btn year-btn {% if forloop.first %}active{% endif %}" data-year="{{ year.name }}">{{ year.name }}</button>
-      {% endfor %}
-    {% endif %}
-  </div>
+  <div class="filter-options" id="yearOptions"></div>
 </div>
 
-<!-- 2. 月份选择器 -->
+<!-- 月份选择器 -->
 <div class="filter-bar month-bar">
   <div class="filter-label">月份</div>
-  <div class="filter-options" id="monthOptions">
-    {% assign months = "01,02,03,04,05,06,07,08,09,10,11,12" | split: "," %}
-    {% for month in months %}
-      <button class="filter-btn month-btn" data-month="{{ month }}">{{ month }}月</button>
-    {% endfor %}
-  </div>
+  <div class="filter-options" id="monthOptions"></div>
 </div>
 
-<!-- 3. 文章列表 -->
-<div class="post-list" id="postList">
-  {% if site.posts.size == 0 %}
-    <div style="padding: 30px; text-align: center; color: #666; background: #f9f9f9; border-radius: 8px; margin: 20px 0;">
-      <h3 style="margin-top: 0;">未找到任何文章</h3>
-      <p style="margin-bottom: 10px;">请检查以下几点：</p>
-      <ul style="text-align: left; display: inline-block; font-size: 0.9rem;">
-        <li><strong>文件名格式：</strong> 必须是 <code>YYYY-MM-DD-filename.md</code> (例如 <code>2025-12-28-news.md</code>)。</li>
-        <li><strong>日期配置：</strong> 确保 <code>_config.yml</code> 中包含 <code>future: true</code>。</li>
-        <li><strong>修改后重启：</strong> 修改 _config.yml 后通常需要重启 Jekyll 服务才能生效。</li>
-      </ul>
-    </div>
-  {% else %}
-    {% for post in site.posts %}
-      <article class="post-item" 
-               data-year="{{ post.date | date: '%Y' }}" 
-               data-month="{{ post.date | date: '%m' }}">
-        <a href="{{ post.url | relative_url }}" class="post-link">
-          <span class="post-date">{{ post.date | date: "%m.%d" }}</span>
-          <h2 class="post-title">{{ post.title }}</h2>
-        </a>
-      </article>
-    {% endfor %}
-  {% endif %}
+<!-- 日历网格 -->
+<div class="calendar-container" id="calendarContainer">
+  <!-- JS 渲染 -->
 </div>
-
-<script>
-(function() {
-  const yearBtns = document.querySelectorAll('.year-btn');
-  const monthBtns = document.querySelectorAll('.month-btn');
-  const posts = document.querySelectorAll('.post-item');
-  
-  // 默认选中第一个年份按钮（通常是最新的年份）
-  let currentYear = document.querySelector('.year-btn.active')?.dataset.year;
-  let currentMonth = 'all'; 
-
-  function filterPosts() {
-    // 如果没有文章或年份，直接返回
-    if (!currentYear) return;
-
-    let hasVisible = false;
-
-    // 1. 筛选文章
-    posts.forEach(post => {
-      const pYear = post.dataset.year;
-      const pMonth = post.dataset.month;
-      
-      let match = (pYear === currentYear);
-      if (currentMonth !== 'all') {
-        match = match && (pMonth === currentMonth);
-      }
-      
-      post.style.display = match ? 'block' : 'none';
-      if (match) hasVisible = true;
-    });
-    
-    // 2. 更新月份按钮状态
-    monthBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.month === currentMonth);
-    });
-    
-    // 3. 更新年份按钮状态
-    yearBtns.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.year === currentYear);
-    });
-  }
-
-  // 绑定年份点击
-  yearBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // 移除其他年份的高亮
-      yearBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      currentYear = btn.dataset.year;
-      currentMonth = 'all'; // 切换年份时重置月份
-      filterPosts();
-    });
-  });
-
-  // 绑定月份点击
-  monthBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (currentMonth === btn.dataset.month) {
-        currentMonth = 'all';
-      } else {
-        currentMonth = btn.dataset.month;
-      }
-      filterPosts();
-    });
-  });
-
-  // 初始化
-  filterPosts();
-})();
-</script>

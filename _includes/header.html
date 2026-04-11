@@ -1,0 +1,32 @@
+<!-- 顶部吸顶页眉（同主站风格） -->
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <!-- 左：Logo + 站名 -->
+    <div class="site-branding">
+      <a href="{{ '/' | relative_url }}" class="site-logo">
+        <img src="{{ site.logo | default: '/assets/logo.svg' | relative_url }}" alt="{{ site.title }}">
+      </a>
+      {% if site.show_title != false %}
+      <div class="brand-text">
+        <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- 中：页眉导航（桌面端） -->
+    <nav class="header-nav" id="header-nav">
+      <ul class="header-nav-list">
+        <li><a href="{{ site.main_site | default: '/' }}/">首页</a></li>
+        <li><a href="{{ site.main_site | default: '/' }}/about/">关于</a></li>
+        <li><a href="{{ '/' | relative_url }}" class="nav-active">AI 早报</a></li>
+        <li><a href="{{ site.main_site | default: '/' }}/photos/">图片库</a></li>
+        <li><a href="{{ '/feed.xml' | relative_url }}" target="_blank" rel="noopener noreferrer">RSS</a></li>
+      </ul>
+    </nav>
+
+    <!-- 右：汉堡按钮（移动端） -->
+    <button class="sidebar-toggle" id="hamburgerButton" aria-label="打开菜单">
+      <svg class="icon-svg"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>

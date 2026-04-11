@@ -1,19 +1,28 @@
 title: "每日 AIGC 早报"
 email: i@lishuhang.me
 description: "每日 AIGC 早报"
-baseurl: "/daily" # 重要：部署在子路径
+baseurl: "/daily"
 url: "https://lishuhang.me"
+
+# 主站地址（用于"关于"等链接）
+main_site: "https://lishuhang.me"
+
+color: "#347df8"
+logo: "/assets/logo.svg"
+show_title: true
+
+# Footer 左侧 credit（支持 Markdown）
+credit: "© 2025 书航 [lishuhang.me](https://lishuhang.me)"
 
 # 构建设置
 markdown: kramdown
 theme: null
-
-# 链接格式设置，确保生成 /2025/12/28/ 这样的路径
 permalink: /:year/:month/:day/
-
 future: true
 
-# 插件
+# 图片 CDN
+weserv: "https://images.weserv.nl"
+
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
