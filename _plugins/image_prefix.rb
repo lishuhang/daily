@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # ImagePrefix plugin for lishuhang.me (v1.11)
-# Uses hooks instead of Generator for earlier execution.
+# Uses :posts, :post_init hook for earliest execution.
 
 module Jekyll
   module ImagePrefix
@@ -60,16 +60,11 @@ module Jekyll
   end
 end
 
-# Hook: runs after post is initialized, before rendering
-Jekyll::Hooks.register :posts, :pre_render do |post, payload|
+# Use :post_init hook — runs immediately after post is created, before anything else
+Jekyll::Hooks.register :posts, :post_init do |post|
   Jekyll::ImagePrefix.rewrite(post, post.site)
-  # Also update the payload (used by Liquid templates)
-  if post.data['image'].is_a?(String) && post.data['image'] =~ %r{\Ahttps?://}
-    payload['page']['image'] = post.data['image'] if payload['page']
-  end
 end
 
-# Also log at startup
 Jekyll::Hooks.register :site, :after_init do |site|
   prefixes = Jekyll::ImagePrefix.config(site)
   Jekyll.logger.info 'ImagePrefix:', "Loaded with #{prefixes.size} prefix ranges"
