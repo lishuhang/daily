@@ -5,20 +5,15 @@
 # Rewrites relative image paths (/<year>/<month>/...) in post content to full URLs
 # based on post date and site.image_prefixes config.
 #
-# Posts store image URLs as: /YYYY/MM/DD/slug/NN.ext  (or /YYYY/MM/MMDD-d.ext for daily)
-# At build time, this plugin combines: prefix + path → full URL
+# Posts store image URLs as: /YYYY/MM/DD/slug/NN.ext
+# At build time, plugin combines: prefix + path → full URL
 #
 # Config format in _config.yml:
 #   image_prefixes:
-#     - range: [null, "2026-07"]        # before 2026-08
+#     - range: [null, "2026-07"]
 #       prefix: "https://lishuhang.me/img/"
-#     - range: ["2026-08", null]        # 2026-08 onwards
-#       prefix: "https://lishuhang.me/img/"  # (change to img2/ or R2 URL when migrating)
-#
-# Example:
-#   Post has: image: /2025/10/07/slug/01.jpg
-#   Config prefix: "https://lishuhang.me/img/"
-#   Result: https://lishuhang.me/img/2025/10/07/slug/01.jpg
+#     - range: ["2026-08", null]
+#       prefix: "https://lishuhang.me/img/"
 
 module Jekyll
   class ImagePrefixGenerator < Generator
@@ -53,14 +48,17 @@ module Jekyll
       content = post.content
 
       # Markdown image: ![alt](/YYYY/...)
-      content = content.gsub(%r{(!\[[^\]]*\]\()/(\d{4}/[^\)]+)\)}) do
-        "#{Regexp.last_match(1)}#{prefix_clean}/#{Regexp.last_match(2)})"
+      content = content.gsub(%r{(!\[[^\]]*\]\()/(\d{4}/[^\)]+)\)}) do |m|
+        match_data = Regexp.last_match
+        "#{match_data[1]}#{prefix_clean}/#{match_data[2]})"
       end
 
       # HTML img src="/YYYY/..." or src='/YYYY/...'
-      content = content.gsub(/(src=["\'])/(\d{4}/[^\1"\']+)\1/) do
-        m = Regexp.last_match
-        "#{m[1]}#{prefix_clean}/#{m[2]}#{m[1]}"
+      # Use %r{} delimiter to avoid escaping issues with /
+      content = content.gsub(%r{(src=["'])/(\d{4}/[^"']+)["']}) do |m|
+        match_data = Regexp.last_match
+        quote = match_data[1][-1, 1]
+        "#{match_data[1]}#{prefix_clean}/#{match_data[2]}#{quote}"
       end
 
       post.content = content
