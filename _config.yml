@@ -36,3 +36,21 @@ plugins:
 exclude:
   - Gemfile
   - Gemfile.lock
+
+
+# ============================================================
+# Image storage prefixes (v1.11, aligned with main blog)
+# ============================================================
+# Posts store relative paths: /YYYY/MM/MMDD-d.ext
+# Plugin combines: prefix + path → full URL
+image_prefixes:
+  - range: [null, "2026-07"]
+    prefix: "https://lishuhang.me/img/"
+  - range: ["2026-08", null]
+    prefix: "https://lishuhang.me/img/"
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
