@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # ImagePrefix plugin for lishuhang.me (v1.11)
-# Uses :posts, :post_init hook for earliest execution.
 
 module Jekyll
   module ImagePrefix
@@ -39,8 +38,9 @@ module Jekyll
         post.data['image'] = prefix_clean + post.data['image']
       end
 
-      # Rewrite content
+      # Rewrite content (if available)
       content = post.content
+      return if content.nil?
 
       # Markdown: ![alt](/YYYY/...)
       content = content.gsub(%r{(!\[[^\]]*\]\()/(\d{4}/[^\)]+)\)}) do
@@ -60,9 +60,13 @@ module Jekyll
   end
 end
 
-# Use :post_init hook — runs immediately after post is created, before anything else
-Jekyll::Hooks.register :posts, :post_init do |post|
+# Use :pre_render hook — content is loaded, before Liquid rendering
+Jekyll::Hooks.register :posts, :pre_render do |post, payload|
   Jekyll::ImagePrefix.rewrite(post, post.site)
+  # Also update the payload (used by Liquid templates and seo-tag)
+  if payload && payload['page'] && post.data['image']
+    payload['page']['image'] = post.data['image']
+  end
 end
 
 Jekyll::Hooks.register :site, :after_init do |site|
