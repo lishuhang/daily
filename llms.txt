@@ -1,0 +1,19 @@
+---
+layout: null
+permalink: /llms.txt
+---
+# 每日 AIGC 早报（lishuhang.me/daily）
+
+> 书航每日整理的 AIGC 行业早报，共 {{ site.posts | size }} 期。同日重发不覆盖，以每日首次同步版本为准（后续重发可能因审查删改）。
+> 给 AI agent：查期号与取全文请用下方索引，不要遍历 GitHub 仓库。
+
+## 索引
+
+- [全部期号 JSON 索引](https://lishuhang.me/daily/issues.json): 字段 url / title / date / categories / tags / excerpt / cover / raw_md
+- [RSS（最新 20 条）](https://lishuhang.me/daily/feed.xml)
+- [主站 llms.txt](https://lishuhang.me/llms.txt): 主博客文章索引与本早报的完整 agent 入口
+
+## Agent 服务
+
+- [MCP Server](https://mcp.lishuhang.com/mcp): 免鉴权；早报相关工具 list_daily_issues / get_daily_issue，主博客工具见主站说明
+- [skill.md](https://lishuhang.me/skill.md)
